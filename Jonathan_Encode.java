@@ -95,7 +95,7 @@ public class Jonathan_Encode extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String plaintext = jTextField1.getText().toLowerCase().replace(" ", "");
+        String plaintext = jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase();
         String key = "mine";
         StringBuilder ciphertext = new StringBuilder("");
         int consonants = 0;
@@ -134,8 +134,44 @@ public class Jonathan_Encode extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String ciphertext = jTextField1.getText();
-        
+        StringBuilder ciphertext = new StringBuilder(jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase());
+        String plaintext = "";
+        for(int i = 0; i < ciphertext.length() - 1; i++){
+            if(ciphertext.charAt(i) == 'm' && ciphertext.charAt(i + 1) == 'e'){
+                ciphertext.deleteCharAt(i + 1);
+                //To make it look pretty
+                ciphertext.insert(i, "");
+            }
+        }
+        String cphr2 = ciphertext.toString();
+        String key = "mine";
+        int consonants = 0;
+        boolean rot13 = false;
+        for(int i = 0; i < cphr2.length(); i++){
+            if(consonants == 6){
+                consonants = 0;
+                rot13 = !rot13;
+            }
+            char c = cphr2.charAt(i);
+            if(rot13){
+                //Implement rot13
+                if       (c >= 'a' && c <= 'm') c += 13;
+                else if  (c >= 'A' && c <= 'M') c += 13;
+                else if  (c >= 'n' && c <= 'z') c -= 13;
+                else if  (c >= 'N' && c <= 'Z') c -= 13;
+            }
+            else{
+                c -= (key.charAt(i%4) - 'a');
+                if(c < 97){
+                    c += 26;
+                }
+            }
+            if(isConsonant(c)){
+                consonants++;
+            }
+            plaintext += c;
+        }
+        jTextArea1.setText(plaintext);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
