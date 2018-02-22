@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Yu's Mandarin</title>
+		<link id = "style" rel="stylesheet" type="text/css" href="styling.css">
+	</head>
+	<body>
+		<script>
+			var color = 0;
+			var toggleMenu = function(){
+				if(document.getElementById("list-nav").style.display === "none"){
+					document.getElementById("list-nav").style.display = "block";
+				}
+				else{
+					document.getElementById("list-nav").style.display = "none";
+				}
+			}
+			var setOpacity = function(num, opacity){
+				document.getElementById(num).style.opacity = opacity;
+			}
+			var setColor = function(){
+				if(document.getElementById("style").getAttribute("href") === "styling.css"){
+					document.getElementById("style").setAttribute("href", "style2.css");
+				}
+				else if(document.getElementById("style").getAttribute("href") === "style2.css"){
+					document.getElementById("style").setAttribute("href", "style3.css");
+				}
+				else{
+					document.getElementById("style").setAttribute("href", "styling.css");
+				}
+			}
+			var encryptMessage = function(){
+				var plaintext = document.getElementById("toEncrypt").innerText.replace(/[^a-zA-Z]/g, "").toLowerCase();
+				var key = "mine";
+				var ciphertext = "";
+				var consonants = 0;
+				var rot13 = false;
+				for(var i = 0; i < plaintext.length(); i++){
+					if(consonants === 6){
+						consonants = 0;
+						rot13 = !rot13;
+					}
+					var c = plaintext.charAt(i);
+					if(isConsonant(c)){
+						consonants++;
+					}
+					if(rot13){
+						//Implement rot13
+						if       (c >= 'a' && c <= 'm') c += 13;
+						else if  (c >= 'A' && c <= 'M') c += 13;
+						else if  (c >= 'n' && c <= 'z') c -= 13;
+						else if  (c >= 'N' && c <= 'Z') c -= 13;
+					}
+					else{
+						c += (key.charAt(i%4) - 'a');
+						if(c > 122){
+							c -= 26;
+						}
+					}
+					ciphertext += c;
+				}
+				for(int i = 0; i < ciphertext.length(); i++){
+					if(ciphertext.charAt(i) == 'm'){
+						txt1.slice(0, i) + "e" + txt1.slice(i);
+					}
+				}
+				document.getElementById("output").val = ciphertext;
+			}
+			var decryptMessage = function(){
+				
+			}
+		</script>
+		<div id = "menu">
+			<p unselectable = "on" id = "menu-open"><span onClick = "toggleMenu()">&#9776;</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Yu's Mandarin<span onClick = "setColor()" id = "cc">Change Style</span></p>
+			<ul id="list-nav">
+				<li id = "main" onMouseOver = "setOpacity(this, 0.5)" onMouseOut = "setOpacity(this, 1)"><a href = "index.html">Main Page</a></li>
+				<li id = "data" onMouseOver = "setOpacity(this, 0.5)" onMouseOut = "setOpacity(this, 1)"><a href = "data.html" class = "right">Data Table</a></li>
+				<li id = "importance" onMouseOver = "setOpacity(this, 0.5)" onMouseOut = "setOpacity(this, 1)"><a href = "theory.html" class = "right">Importance</a></li>
+				<li id = "resources" onMouseOver = "setOpacity(this, 0.5)" onMouseOut = "setOpacity(this, 1)"><a href = "resources.html" class = "right">Resources</a></li>
+				<li id = "ref" onMouseOver = "setOpacity(this, 0.5)" onMouseOut = "setOpacity(this, 1)"><a href = "references.html" class = "right">References</a></li>
+			</ul>
+		</div>
+		<div id = "content">
+			<h2>Yu's Mandarin: A brief history</h2>
+			<p>Yu's Mandarin was invented by student Jonathan Yu at Johnny University during a boring lecture in the class
+               History of Cryptography (103). It's a piecewise function, alternating between ROT13 and a Vigenère cipher. 
+			   Yu had a game going with fellow classmates where they added certain forbidden words to the code every math exam. 
+			   The words started with 'mine' and now include 'now', 'here', 'this', and 'on'. Therefore, the code was based off 
+			   of the word that started it, 'mine'.</p>
+			<ol>
+			<li>Starts as Vigenère cipher with a key of “mine”.</li>
+			<li>After every 6th consonant, it switches between ROT13 and Vigenère cipher.</li>
+			<li>After every “m” in the final ciphertext, an “e” is added right after it. This is to confuse frequency analysis.</li>
+			</ol>
+			<figure>
+				<a title="By PhilippeTeuwen (Own work) [CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3ACipherText_Stealing_(CTS)_on_CBC%2C_encryption_mode.svg" target = "_blank"><img width="100%" alt="CipherText Stealing (CTS) on CBC, encryption mode" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/CipherText_Stealing_%28CTS%29_on_CBC%2C_encryption_mode.svg/512px-CipherText_Stealing_%28CTS%29_on_CBC%2C_encryption_mode.svg.png"/></a>
+				<figcaption class = "ime">Encryption Scheme discussed during long lecture</figcaption>
+			</figure>
+			<form>
+				<input id = "toEncrypt" type="text" width = "100%">&ensp;Enter Text Here
+				<br>
+				<br>
+				<textarea id = "output" name="output" width = "100%">Output</textarea>
+				<br>
+				<button type="button" onclick="encryptMessage()">Encrypt</button>
+				&emsp;
+				<button type="button" onclick="decryptMessage()">Decrypt</button>
+			</form>
+			<br>
+			<br>
+			<br>
+			<h4>About Us</h4>
+			<hr>
+			<p>This is the Centres for Science and Engineering of Johnny University, headquartered
+			   in the city of Miami, New Mexico. The crystal-clear skies of Miami are perfect
+			   for a state-of-the-art observatory. Our founder, Jonathan Yu, has always
+			   valued our science program, noting that "...our science students will shape the
+			   world as we know it." in his 2017 inaugural address. A large percentage of Johnny
+			   University's funding goes toward the maintenance of a robust, semi-independent space
+			   science division, scientists that will become the vanguard of exploration and technology.
+			   Our personnel include:</p>
+			<figure>
+				<a href = "https://en.wikipedia.org/wiki/Miami,_New_Mexico" target="_blank"><img class = "ime" src = "http://www.eppgroup.eu/sites/default/files/styles/large/public/photo/2012/10/113145561.jpg?itok=fP8Vewar" width = "400px"></a>
+				<figcaption class = "ime">Miami, NM</figcaption>
+			</figure>
+			<ul>
+				<li><b>Andy Tang:</b> Dean of the School of Science, Professor of Computer Science, and Professor Emeritus of Astronomy</li>
+				<li><b>Lawrence Zhao:</b> Associate Dean of the School of Science and Professor of Chemistry</li>
+				<li><b></b> Professor Emeritus of Geology</li>
+				<li><b>Zhaohan Sun:</b> Professor of Biology</li>
+				<li><b>Michael Li:</b> Professor of Electrical Engineering</li>
+				<li><b>Warren Buck:</b> Professor of Mathematics</li>
+				<li><b>Lillian Tolman-Bronski:</b> Professor of Neuroscience</li>
+				<li><b></b> Associate Professor of Chemistry</li>
+				<li><b></b> Associate Professor of Astronomy</li>
+				<li><b>Isabel Dennison:</b> Associate Professor of Biology</li>
+				<li><b></b> Associate Professor of Electrical Engineering</li>
+				<li><b></b> Associate Professor of Computer Science</li>
+				<li><b></b> Assistant Professor of Mathematics</li>
+			</ul>
+		</div>
+
+				<div style = "height: 100px"></div>			<footer>
+				<center><p>Site developed and maintained by the Centre for Computing and Algorithmic Research of <a href = "https://users.admin.illinois.edu/jtyu2/Project/index.html">Johnny University</a></p></center>
+				<center><p>Contact: andyyt2@illinois.edu</p></center>
+			</footer>
+	</body>
+</html>
