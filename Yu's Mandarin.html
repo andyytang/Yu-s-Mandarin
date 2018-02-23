@@ -29,13 +29,17 @@
 					document.getElementById("style").setAttribute("href", "styling.css");
 				}
 			}
+			var isConsonant = function(c){
+			    var cons = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+				return cons.indexOf(c) > -1;
+			}
 			var encryptMessage = function(){
-				var plaintext = document.getElementById("toEncrypt").innerText.replace(/[^a-zA-Z]/g, "").toLowerCase();
+				var plaintext = document.getElementById("toEncrypt").value.replace(/[^a-zA-Z]/g, "").toLowerCase();
 				var key = "mine";
 				var ciphertext = "";
 				var consonants = 0;
 				var rot13 = false;
-				for(var i = 0; i < plaintext.length(); i++){
+				for(var i = 0; i < plaintext.length; i++){
 					if(consonants === 6){
 						consonants = 0;
 						rot13 = !rot13;
@@ -46,28 +50,65 @@
 					}
 					if(rot13){
 						//Implement rot13
-						if       (c >= 'a' && c <= 'm') c += 13;
-						else if  (c >= 'A' && c <= 'M') c += 13;
-						else if  (c >= 'n' && c <= 'z') c -= 13;
-						else if  (c >= 'N' && c <= 'Z') c -= 13;
+						if       (c >= 'a' && c <= 'm') c = String.fromCharCode(c.charCodeAt(0) + 13);
+						else if  (c >= 'A' && c <= 'M') c = String.fromCharCode(c.charCodeAt(0) + 13);
+						else if  (c >= 'n' && c <= 'z') c = String.fromCharCode(c.charCodeAt(0) - 13);
+						else if  (c >= 'N' && c <= 'Z') c = String.fromCharCode(c.charCodeAt(0) - 13);
 					}
 					else{
-						c += (key.charAt(i%4) - 'a');
-						if(c > 122){
-							c -= 26;
+						c = String.fromCharCode(c.charCodeAt(0) + key.charCodeAt(i%4) - 'a'.charCodeAt(0));
+						if(c.charCodeAt(0) > 122){
+							c = String.fromCharCode(c.charCodeAt(0) - 26);
 						}
 					}
 					ciphertext += c;
 				}
-				for(int i = 0; i < ciphertext.length(); i++){
-					if(ciphertext.charAt(i) == 'm'){
-						txt1.slice(0, i) + "e" + txt1.slice(i);
+				for(var i = 0; i < ciphertext.length; i++){
+					if(ciphertext.charAt(i) === 'm'){
+						ciphertext = ciphertext.slice(0, i + 1) + "e" + ciphertext.slice(i + 1);
+						i++;
 					}
 				}
-				document.getElementById("output").val = ciphertext;
+				document.getElementById("output").value = ciphertext;
 			}
 			var decryptMessage = function(){
-				
+				var ciphertext = document.getElementById("toEncrypt").value.replace(/[^a-zA-Z]/g, "").toLowerCase();
+				var plaintext = "";
+				for(var i = 0; i < ciphertext.length - 1; i++){
+					if(ciphertext.charAt(i) === 'm' && ciphertext.charAt(i + 1) === 'e'){
+						ciphertext = ciphertext.slice(0, i) + ciphertext.slice(i + 1);
+					}
+				}
+				//Will remove java references later
+				var cphr2 = ciphertext;
+				var key = "mine";
+				var consonants = 0;
+				var rot13 = false;
+				for(var i = 0; i < cphr2.length; i++){
+					if(consonants === 6){
+						consonants = 0;
+						rot13 = !rot13;
+					}	
+					var c = cphr2.charAt(i);
+					if(rot13){
+						//Implement rot13
+						if       (c >= 'a' && c <= 'm') c = String.fromCharCode(c.charCodeAt(0) + 13);
+						else if  (c >= 'A' && c <= 'M') c = String.fromCharCode(c.charCodeAt(0) + 13);
+						else if  (c >= 'n' && c <= 'z') c = String.fromCharCode(c.charCodeAt(0) - 13);
+						else if  (c >= 'N' && c <= 'Z') c = String.fromCharCode(c.charCodeAt(0) - 13);
+					}
+					else{
+						c = String.fromCharCode(c.charCodeAt(0) - key.charCodeAt(i%4) + 'a'.charCodeAt(0));
+						if(c.charCodeAt(0) < 97){
+							c = String.fromCharCode(c.charCodeAt(0) + 26);
+						}
+					}
+					if(isConsonant(c)){
+						consonants++;
+					}
+					plaintext += c;
+				}
+				document.getElementById("output").value = plaintext;
 			}
 		</script>
 		<div id = "menu">
