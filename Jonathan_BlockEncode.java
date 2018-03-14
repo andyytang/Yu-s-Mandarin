@@ -18,12 +18,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author andyyt2
  */
-public class Jonathan_Encode extends javax.swing.JFrame {
+public class Jonathan_BlockEncode extends javax.swing.JFrame {
 
     /**
      * Creates new form Jonathan_Encode
      */
-    public Jonathan_Encode() {
+    public Jonathan_BlockEncode() {
         initComponents();
     }
     public static boolean isConsonant(char c){
@@ -48,7 +48,6 @@ public class Jonathan_Encode extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
-        setMaximumSize(new java.awt.Dimension(231, 155));
         setMinimumSize(new java.awt.Dimension(231, 155));
         setResizable(false);
 
@@ -85,7 +84,7 @@ public class Jonathan_Encode extends javax.swing.JFrame {
         jTextField2.setBackground(new java.awt.Color(50, 50, 50));
         jTextField2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField2.setText("Version");
+        jTextField2.setText("Key");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -124,83 +123,95 @@ public class Jonathan_Encode extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String plaintext = jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase();
-        String key = "mine";
-        StringBuilder ciphertext = new StringBuilder("");
-        int consonants = 0;
-        boolean rot13 = false;
-        for(int i = 0; i < plaintext.length(); i++){
-            if(consonants == 6){
-                consonants = 0;
-                rot13 = !rot13;
+        int k = Integer.parseInt(jTextField2.getText());
+        String trueplaintext = jTextField1.getText();
+        for(int j = 0; j < k; j++){
+            String plaintext = jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase();
+            String key = "mine";
+            StringBuilder ciphertext = new StringBuilder("");
+            int consonants = 0;
+            boolean rot13 = false;
+            for(int i = 0; i < plaintext.length(); i++){
+                if(consonants == 6){
+                    consonants = 0;
+                    rot13 = !rot13;
+                }
+                char c = plaintext.charAt(i);
+                if(isConsonant(c)){
+                    consonants++;
+                }
+                if(rot13){
+                    //Implement rot13
+                    if       (c >= 'a' && c <= 'm') c += 13;
+                    else if  (c >= 'A' && c <= 'M') c += 13;
+                    else if  (c >= 'n' && c <= 'z') c -= 13;
+                    else if  (c >= 'N' && c <= 'Z') c -= 13;
+                }
+                else{
+                    c += (key.charAt(i%4) - 'a');
+                    if(c > 122){
+                        c -= 26;
+                    }
+                }
+                ciphertext.append(c);
             }
-            char c = plaintext.charAt(i);
-            if(isConsonant(c)){
-                consonants++;
-            }
-            if(rot13){
-                //Implement rot13
-                if       (c >= 'a' && c <= 'm') c += 13;
-                else if  (c >= 'A' && c <= 'M') c += 13;
-                else if  (c >= 'n' && c <= 'z') c -= 13;
-                else if  (c >= 'N' && c <= 'Z') c -= 13;
-            }
-            else{
-                c += (key.charAt(i%4) - 'a');
-                if(c > 122){
-                    c -= 26;
+            for(int i = 0; i < ciphertext.length(); i++){
+                if(ciphertext.charAt(i) == 'm'){
+                    ciphertext.insert(i + 1, 'e');
                 }
             }
-            ciphertext.append(c);
+            jTextField1.setText(ciphertext.toString());
         }
-        for(int i = 0; i < ciphertext.length(); i++){
-            if(ciphertext.charAt(i) == 'm'){
-                ciphertext.insert(i + 1, 'e');
-            }
-        }
-        jTextArea1.setText(ciphertext.toString());
+        jTextArea1.setText(jTextField1.getText());
+        jTextField1.setText(trueplaintext);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        StringBuilder ciphertext = new StringBuilder(jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase());
-        String plaintext = "";
-        for(int i = 0; i < ciphertext.length() - 1; i++){
-            if(ciphertext.charAt(i) == 'm' && ciphertext.charAt(i + 1) == 'e'){
-                ciphertext.deleteCharAt(i + 1);
-                //To make it look pretty
-                ciphertext.insert(i, "");
-            }
-        }
-        String cphr2 = ciphertext.toString();
-        String key = "mine";
-        int consonants = 0;
-        boolean rot13 = false;
-        for(int i = 0; i < cphr2.length(); i++){
-            if(consonants == 6){
-                consonants = 0;
-                rot13 = !rot13;
-            }
-            char c = cphr2.charAt(i);
-            if(rot13){
-                //Implement rot13
-                if       (c >= 'a' && c <= 'm') c += 13;
-                else if  (c >= 'A' && c <= 'M') c += 13;
-                else if  (c >= 'n' && c <= 'z') c -= 13;
-                else if  (c >= 'N' && c <= 'Z') c -= 13;
-            }
-            else{
-                c -= (key.charAt(i%4) - 'a');
-                if(c < 97){
-                    c += 26;
+        int k = Integer.parseInt(jTextField2.getText());
+        String trueciphertext = jTextField1.getText();
+        for(int j = 0; j < k; j++){
+            StringBuilder ciphertext = new StringBuilder(jTextField1.getText().replaceAll("[^a-zA-Z]", "").toLowerCase());
+            String plaintext = "";
+            for(int i = 0; i < ciphertext.length() - 1; i++){
+                if(ciphertext.charAt(i) == 'm' && ciphertext.charAt(i + 1) == 'e'){
+                    ciphertext.deleteCharAt(i + 1);
+                    //To make it look pretty
+                    ciphertext.insert(i, "");
                 }
             }
-            if(isConsonant(c)){
-                consonants++;
+            String cphr2 = ciphertext.toString();
+            String key = "mine";
+            int consonants = 0;
+            boolean rot13 = false;
+            for(int i = 0; i < cphr2.length(); i++){
+                if(consonants == 6){
+                    consonants = 0;
+                    rot13 = !rot13;
+                }
+                char c = cphr2.charAt(i);
+                if(rot13){
+                    //Implement rot13
+                    if       (c >= 'a' && c <= 'm') c += 13;
+                    else if  (c >= 'A' && c <= 'M') c += 13;
+                    else if  (c >= 'n' && c <= 'z') c -= 13;
+                    else if  (c >= 'N' && c <= 'Z') c -= 13;
+                }
+                else{
+                    c -= (key.charAt(i%4) - 'a');
+                    if(c < 97){
+                        c += 26;
+                    }
+                }
+                if(isConsonant(c)){
+                    consonants++;
+                }
+                plaintext += c;
             }
-            plaintext += c;
+            jTextField1.setText(plaintext);
         }
-        jTextArea1.setText(plaintext);
+        jTextArea1.setText(jTextField1.getText());
+        jTextField1.setText(trueciphertext);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -220,13 +231,13 @@ public class Jonathan_Encode extends javax.swing.JFrame {
                 try {
                     UIManager.setLookAndFeel(info.getClassName());
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Jonathan_Encode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Jonathan_BlockEncode.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InstantiationException ex) {
-                    Logger.getLogger(Jonathan_Encode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Jonathan_BlockEncode.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalAccessException ex) {
-                    Logger.getLogger(Jonathan_Encode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Jonathan_BlockEncode.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(Jonathan_Encode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Jonathan_BlockEncode.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
             }
@@ -236,7 +247,7 @@ public class Jonathan_Encode extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Jonathan_Encode().setVisible(true);
+                new Jonathan_BlockEncode().setVisible(true);
             }
         });
     }
